@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { api, getToken, setToken, AUTH_EXPIRED } from "./api.js";
+import ExerciseAnim from "./ExerciseAnim.jsx";
 
 // Mantenha em sincronia com server/src/engine.js
 const GROUPS = ["Peito", "Costas", "Pernas", "Ombros", "Bíceps", "Tríceps", "Abdômen", "Glúteos"];
@@ -71,9 +72,29 @@ function Auth({ onAuth }) {
 }
 
 // ---------- Visualização ----------
+function ExerciseModal({ ex, onClose }) {
+  useEffect(() => {
+    const onKey = (e) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+  return (
+    <div className="modal" onClick={onClose}>
+      <div className="modal-box" role="dialog" aria-modal="true" aria-label={ex.name} onClick={(e) => e.stopPropagation()}>
+        <ExerciseAnim name={ex.name} group={ex.group} size={220} className="ea-big" />
+        <h3 style={{ margin: "12px 0 4px" }}>{ex.name}</h3>
+        <div className="muted">{ex.group} • {ex.sets} séries × {ex.reps} • descanso {fmtRest(ex.rest)}</div>
+        <button style={{ marginTop: 16, width: "100%" }} onClick={onClose} autoFocus>Fechar</button>
+      </div>
+    </div>
+  );
+}
+
 function PlanView({ plan, onToggleDay }) {
+  const [show, setShow] = useState(null);
   return (
     <div>
+      {show && <ExerciseModal ex={show} onClose={() => setShow(null)} />}
       <div className="muted" style={{ marginBottom: 10 }}>
         {[MODALITIES[plan.modality], LEVELS[plan.level], plan.goal, plan.time && `${plan.time} min/sessão`].filter(Boolean).join(" • ")}
       </div>
@@ -98,7 +119,13 @@ function PlanView({ plan, onToggleDay }) {
                 <tbody>
                   {(d.exercises || []).map((ex, j) => (
                     <tr key={ex.id || j}>
-                      <td>{ex.name}</td><td>{ex.group}</td><td>{ex.sets}</td><td>{ex.reps}</td><td>{fmtRest(ex.rest)}</td>
+                      <td>
+                        <button type="button" className="ex-link" onClick={() => setShow(ex)} title="Ver movimento">
+                          <ExerciseAnim name={ex.name} group={ex.group} size={52} />
+                          <span>{ex.name}</span>
+                        </button>
+                      </td>
+                      <td>{ex.group}</td><td>{ex.sets}</td><td>{ex.reps}</td><td>{fmtRest(ex.rest)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -284,11 +311,12 @@ function PlanEditor({ initial, onSaved, onCancel }) {
           ) : (
             <>
               <div className="exhead row muted">
-                <span style={{ flex: 3 }}>Exercício</span><span style={{ flex: 2 }}>Grupo</span><span>Séries</span><span>Reps</span><span>Desc. (s)</span><span className="icon" />
+                <span className="thumb" /><span style={{ flex: 3 }}>Exercício</span><span style={{ flex: 2 }}>Grupo</span><span>Séries</span><span>Reps</span><span>Desc. (s)</span><span className="icon" />
               </div>
               {d.exercises.map((ex, j) => (
                 <div className="row ex" key={ex.id}>
-                  <input style={{ flex: 3 }} value={ex.name} onChange={(e) => upEx(i, j, { name: e.target.value })} placeholder="Exercício" />
+                  <ExerciseAnim name={ex.name} group={ex.group} size={40} className="thumb" />
+                  <input className="ex-name" style={{ flex: 3 }} value={ex.name} onChange={(e) => upEx(i, j, { name: e.target.value })} placeholder="Exercício" />
                   <select style={{ flex: 2 }} value={ex.group} onChange={(e) => upEx(i, j, { group: e.target.value })}>
                     {GROUPS.map((g) => <option key={g}>{g}</option>)}
                   </select>

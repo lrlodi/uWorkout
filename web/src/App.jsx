@@ -44,7 +44,7 @@ function Auth({ onAuth }) {
     setBusy(true);
     setErr("");
     try {
-      const data = await api(`/api/auth/${mode}`, { method: "POST", body: f });
+      const data = await api(`/auth/${mode}`, { method: "POST", body: f });
       onAuth(data.token, data.user);
     } catch (e2) {
       setErr(e2.message);
@@ -122,7 +122,7 @@ function Generator({ token, onSaved }) {
     setErr("");
     setPlan(null);
     try {
-      setPlan(await api("/api/plans/generate", { method: "POST", token, body: { answers: a } }));
+      setPlan(await api("/plans/generate", { method: "POST", token, body: { answers: a } }));
     } catch (e2) {
       setErr(e2.message);
     } finally {
@@ -132,7 +132,7 @@ function Generator({ token, onSaved }) {
 
   async function save() {
     try {
-      await api("/api/plans", { method: "POST", token, body: { name: plan.name, days: plan.days } });
+      await api("/plans", { method: "POST", token, body: { name: plan.name, days: plan.days } });
       setPlan(null);
       onSaved();
     } catch (e2) {
@@ -205,7 +205,7 @@ function ManualPlan({ token, onSaved }) {
       .filter((d) => d.exercises.length);
     if (!name.trim() || !clean.length) return setErr("Dê um nome e adicione ao menos um exercício.");
     try {
-      await api("/api/plans", { method: "POST", token, body: { name, days: clean } });
+      await api("/plans", { method: "POST", token, body: { name, days: clean } });
       setName("");
       setDays([{ name: "Treino A", focus: "", exercises: [] }]);
       onSaved();
@@ -256,7 +256,7 @@ function MyPlans({ token, refreshKey }) {
 
   async function load() {
     try {
-      const data = await api("/api/plans", { token });
+      const data = await api("/plans", { token });
       setPlans(Array.isArray(data) ? data : data.plans || []);
     } catch (e) {
       setErr(e.message);
@@ -267,7 +267,7 @@ function MyPlans({ token, refreshKey }) {
   async function remove(id) {
     if (!confirm("Excluir este plano?")) return;
     try {
-      await api(`/api/plans/${id}`, { method: "DELETE", token });
+      await api(`/plans/${id}`, { method: "DELETE", token });
       load();
     } catch (e) {
       setErr(e.message);

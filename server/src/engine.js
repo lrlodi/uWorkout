@@ -41,7 +41,7 @@ const T = {
 function pickTemplate(split, n) {
   const s = norm(split);
   if (/ppl|push/.test(s)) return T.ppl;
-  if (/upper|superior|inferior/.test(s)) return T.ul;
+  if (/^ul$|upper|superior|inferior/.test(s)) return T.ul;
   if (/full|corpo/.test(s)) return T.full;
   if (/abc|abcd/.test(s)) return T.abc;
   if (n <= 2) return T.full;

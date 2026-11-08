@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: uworkout-api
+    runtime: node
+    rootDir: server
+    # "npm ci" já roda "prisma generate" via postinstall
+    buildCommand: npm ci && npx prisma migrate deploy
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: DATABASE_URL
+        sync: false # URL do Postgres (use a "Internal Database URL" se o banco estiver no Render)
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGINS
+        sync: false # ex.: https://uworkout.vercel.app,https://*.vercel.app
+      - key: ANTHROPIC_API_KEY
+        sync: false # opcional: sem ela, os planos são gerados pelo motor local
+      - key: AI_MODEL
+        value: claude-opus-5-5
+      - key: FREE_DAILY
+        value: "2"

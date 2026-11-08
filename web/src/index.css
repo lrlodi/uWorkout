@@ -1,0 +1,52 @@
+* { box-sizing: border-box; }
+html, body, #root { min-height: 100%; margin: 0; }
+body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background: #0f172a; color: #e2e8f0; }
+
+.wrap { max-width: 760px; margin: 0 auto; padding: 16px; }
+.card { background: #1e293b; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+h1, h2, h3 { margin: 0 0 12px; }
+p { margin: 6px 0; }
+label { display: block; font-size: 13px; color: #94a3b8; margin: 10px 0 4px; }
+label.check { display: flex; gap: 6px; align-items: center; margin: 0; flex: none; cursor: pointer; }
+label.check input { width: auto; }
+
+input, select, textarea {
+  width: 100%; min-width: 0; padding: 10px; border-radius: 8px;
+  border: 1px solid #334155; background: #0f172a; color: #e2e8f0; font: inherit;
+}
+input:focus, select:focus, textarea:focus { outline: 2px solid #10b981; outline-offset: -1px; }
+
+button { padding: 10px 16px; border: 0; border-radius: 8px; background: #10b981; color: #04130d; font: inherit; font-weight: 600; cursor: pointer; }
+button.sec { background: #334155; color: #e2e8f0; }
+button.del { background: #ef4444; color: #fff; }
+button.icon { flex: none; width: 40px; padding: 10px 0; }
+button:disabled { opacity: .5; cursor: not-allowed; }
+
+.row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.row > * { flex: 1; }
+.row > span.icon { flex: none; width: 40px; }
+.nav { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.nav button { flex: 1; white-space: nowrap; }
+.nav .on { background: #10b981; color: #04130d; }
+
+.day { border-top: 1px solid #334155; padding: 12px 0; }
+.day.done strong { text-decoration: line-through; color: #94a3b8; }
+.ex { margin-top: 6px; flex-wrap: nowrap; }
+.ex input[type="number"] { flex: 1; }
+.exhead { margin-top: 10px; font-size: 12px; flex-wrap: nowrap; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { background: #334155; color: #e2e8f0; padding: 6px 12px; font-weight: 500; border-radius: 999px; }
+.chip.on { background: #10b981; color: #04130d; }
+
+.err { color: #fca5a5; font-size: 14px; margin-top: 8px; }
+.muted { color: #94a3b8; font-size: 13px; }
+.scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 6px; }
+th, td { text-align: left; padding: 6px; border-bottom: 1px solid #334155; }
+
+@media (max-width: 560px) {
+  .ex, .exhead { flex-wrap: wrap; }
+  .exhead { display: none; }
+  .ex > input:first-child { flex-basis: 100%; }
+}
